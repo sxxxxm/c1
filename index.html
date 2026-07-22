@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Saksham Chawla — Video Editor & Motion Storyteller</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0c0c0d;
+    --bg-elev: #141416;
+    --line: rgba(255,255,255,0.08);
+    --text: #f2f0ec;
+    --text-dim: #9a9894;
+    --gold: #d9a441;
+    --gold-soft: rgba(217,164,65,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-weight:400;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  ::selection{background:var(--gold);color:#0c0c0d;}
+
+  /* NAV */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(12,12,13,0.7);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    max-width:1180px;margin:0 auto;padding:18px 32px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{
+    width:38px;height:38px;border-radius:50%;
+    border:1px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;color:var(--gold);font-size:14px;font-weight:600;
+  }
+  .brand-name{font-family:'Fraunces',serif;font-size:19px;font-weight:600;}
+  .nav-links{display:flex;gap:38px;font-size:14px;color:var(--text-dim);}
+  .nav-links a:hover{color:var(--text);}
+  .nav-toggle{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;}
+
+  /* HERO */
+  .hero{
+    padding:190px 0 100px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:-200px;right:-200px;
+    width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle, rgba(217,164,65,0.10), transparent 70%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.15fr 0.85fr;gap:60px;align-items:center;
+  }
+  .eyebrow{
+    color:var(--gold);font-size:12.5px;letter-spacing:0.22em;
+    text-transform:uppercase;font-weight:500;margin-bottom:22px;
+    display:flex;align-items:center;gap:12px;
+    opacity:0;animation:fadeUp 0.7s ease forwards 0.1s;
+  }
+  .eyebrow::before{content:'';width:28px;height:1px;background:var(--gold);}
+  .hero h1{
+    font-size:clamp(52px,7vw,92px);
+    line-height:0.98;
+    opacity:0;animation:fadeUp 0.8s ease forwards 0.25s;
+  }
+  .hero p.sub{
+    margin-top:26px;max-width:480px;font-size:17px;line-height:1.65;
+    color:var(--text-dim);
+    opacity:0;animation:fadeUp 0.8s ease forwards 0.4s;
+  }
+  .hero-cta{
+    display:flex;gap:16px;margin-top:38px;flex-wrap:wrap;
+    opacity:0;animation:fadeUp 0.8s ease forwards 0.55s;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:15px 28px;border-radius:30px;
+    font-size:14.5px;font-weight:500;cursor:pointer;
+    transition:transform 0.25s ease, opacity 0.25s ease;
+    border:1px solid transparent;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-solid{background:var(--gold);color:#161302;}
+  .btn-solid:hover{opacity:0.9;}
+  .btn-outline{border-color:var(--line);color:var(--text);}
+  .btn-outline:hover{border-color:var(--gold);}
+  .hero-photo{
+    position:relative;
+    opacity:0;animation:fadeUp 1s ease forwards 0.3s;
+  }
+  .hero-photo .frame{
+    border-radius:22px;border:1px solid var(--line);
+    overflow:hidden;aspect-ratio:4/5;
+    background:linear-gradient(160deg,#1c1c1f,#0c0c0d);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+  }
+  .hero-photo .placeholder-avatar{
+    font-family:'Fraunces',serif;font-size:64px;color:var(--gold);opacity:0.35;
+  }
+  .hero-photo .tag{
+    position:absolute;bottom:18px;left:18px;
+    background:rgba(12,12,13,0.75);backdrop-filter:blur(6px);
+    padding:9px 16px;border-radius:30px;font-size:12.5px;
+    border:1px solid var(--line);
+    display:flex;align-items:center;gap:8px;
+  }
+  .tag-dot{width:7px;height:7px;border-radius:50%;background:#5fd18a;}
+
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(18px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  /* MARQUEE */
+  .marquee-band{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:22px 0;overflow:hidden;white-space:nowrap;
+  }
+  .marquee-track{display:inline-flex;animation:scroll 26s linear infinite;}
+  .marquee-track span{
+    font-family:'Fraunces',serif;font-size:26px;color:var(--text-dim);
+    padding:0 26px;display:inline-flex;align-items:center;gap:26px;
+  }
+  .marquee-track span::after{content:'●';color:var(--gold);font-size:9px;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  section{padding:120px 0;}
+  .section-head{margin-bottom:56px;max-width:640px;}
+  .eyebrow-line{
+    color:var(--gold);font-size:12.5px;letter-spacing:0.18em;text-transform:uppercase;
+    margin-bottom:16px;font-weight:500;
+  }
+  .section-head h2{font-size:clamp(34px,4.2vw,50px);line-height:1.05;}
+
+  /* PORTFOLIO */
+  .subheading{font-size:20px;color:var(--text-dim);margin:48px 0 24px;font-family:'Fraunces',serif;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+  .work-card{
+    border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    background:var(--bg-elev);
+    transition:transform 0.35s ease, border-color 0.35s ease;
+    cursor:pointer;
+  }
+  .work-card:hover{transform:translateY(-6px);border-color:rgba(217,164,65,0.4);}
+  .work-thumb{
+    aspect-ratio:9/13;background:linear-gradient(150deg,#1b1a1d,#0c0c0d);
+    display:flex;align-items:center;justify-content:center;position:relative;
+  }
+  .grid-2 .work-thumb{aspect-ratio:16/10;}
+  .play-btn{
+    width:52px;height:52px;border-radius:50%;background:rgba(217,164,65,0.9);
+    display:flex;align-items:center;justify-content:center;color:#161302;font-size:18px;
+  }
+  .work-info{
+    padding:16px 18px;display:flex;justify-content:space-between;align-items:center;
+    font-size:14px;
+  }
+  .work-tag{color:var(--gold);font-size:11px;letter-spacing:0.1em;font-weight:600;}
+  .show-more{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid var(--line);border-radius:30px;padding:12px 22px;font-size:13.5px;
+    margin-top:8px;
+  }
+  .section-top-row{display:flex;justify-content:space-between;align-items:flex-end;}
+
+  /* SKILLS */
+  .expertise-grid{display:grid;grid-template-columns:0.8fr 1.2fr;gap:70px;align-items:start;}
+  .expertise-grid p{color:var(--text-dim);margin-top:18px;line-height:1.7;max-width:380px;}
+  .skill-row{margin-bottom:26px;}
+  .skill-row .top{display:flex;justify-content:space-between;font-size:15px;margin-bottom:10px;}
+  .skill-row .top span:last-child{color:var(--gold);font-size:13px;}
+  .bar-track{height:2px;background:var(--line);position:relative;}
+  .bar-fill{height:2px;background:var(--gold);width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1);}
+
+  /* TESTIMONIALS */
+  blockquote{
+    background:var(--bg-elev);border:1px solid var(--line);border-radius:16px;
+    padding:32px;
+  }
+  .quote-mark{color:var(--gold);font-family:'Fraunces',serif;font-size:34px;line-height:1;margin-bottom:14px;display:block;}
+  blockquote p{font-size:17px;line-height:1.6;margin-bottom:26px;}
+  .author{display:flex;align-items:center;gap:12px;}
+  .avatar-init{
+    width:38px;height:38px;border-radius:50%;background:var(--gold-soft);
+    color:var(--gold);display:flex;align-items:center;justify-content:center;
+    font-weight:600;font-size:14px;
+  }
+  .author .name{font-weight:600;font-size:14.5px;}
+  .author .role{color:var(--text-dim);font-size:13px;}
+
+  /* CONTACT */
+  .contact-grid{display:grid;grid-template-columns:0.95fr 1.05fr;gap:70px;align-items:start;}
+  .contact-grid h2{font-size:clamp(34px,4.5vw,52px);line-height:1.05;margin-bottom:22px;}
+  .contact-grid > div:first-child p{color:var(--text-dim);max-width:400px;line-height:1.65;margin-bottom:30px;}
+  .contact-line{margin-bottom:10px;font-size:15.5px;}
+  .contact-line a:hover{color:var(--gold);}
+  form{
+    background:var(--bg-elev);border:1px solid var(--line);border-radius:20px;padding:40px;
+    display:grid;grid-template-columns:1fr 1fr;gap:26px;
+  }
+  .field{display:flex;flex-direction:column;gap:9px;}
+  .field.full{grid-column:1/-1;}
+  label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);}
+  input,select,textarea{
+    background:none;border:none;border-bottom:1px solid var(--line);
+    color:var(--text);font-size:15px;padding:8px 0;font-family:'Inter',sans-serif;
+  }
+  select option{background:var(--bg-elev);}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
+  textarea{resize:none;min-height:70px;}
+  .submit-btn{
+    grid-column:1/-1;background:var(--gold);color:#161302;border:none;
+    padding:16px;border-radius:30px;font-size:15px;font-weight:600;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    transition:opacity 0.25s ease;
+  }
+  .submit-btn:hover{opacity:0.9;}
+  .form-note{grid-column:1/-1;font-size:12.5px;color:var(--text-dim);text-align:center;display:none;}
+  .form-note.show{display:block;}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:60px 0 30px;}
+  .footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+  footer h3{font-size:22px;margin-bottom:8px;}
+  footer .role{color:var(--text-dim);font-size:14px;}
+  footer h4{color:var(--gold);font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:16px;}
+  footer .row{display:flex;align-items:center;gap:10px;font-size:14px;margin-bottom:10px;color:var(--text-dim);}
+  .social-row{display:flex;gap:12px;}
+  .social-row a{
+    width:38px;height:38px;border:1px solid var(--line);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .social-row a:hover{border-color:var(--gold);color:var(--gold);}
+  .footer-bottom{
+    border-top:1px solid var(--line);padding-top:22px;
+    display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-dim);
+  }
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease, transform 0.7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  @media(max-width:860px){
+    .nav-links{display:none;}
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-photo{order:-1;max-width:320px;margin:0 auto;}
+    .grid-3{grid-template-columns:1fr 1fr;}
+    .grid-2{grid-template-columns:1fr;}
+    .expertise-grid,.contact-grid{grid-template-columns:1fr;gap:36px;}
+    form{grid-template-columns:1fr;padding:26px;}
+    .footer-grid{grid-template-columns:1fr;gap:28px;}
+    .footer-bottom{flex-direction:column;gap:8px;}
+    section{padding:80px 0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="brand">
+      <div class="brand-mark">SC</div>
+      <div class="brand-name">Saksham Chawla</div>
+    </div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#skills">Skills</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home" style="padding-top:0;">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Video Editor &amp; Motion Storyteller</div>
+      <h1>Saksham<br>Chawla</h1>
+      <p class="sub">I craft scroll-stopping short-form and cinematic long-form edits that turn raw footage into stories brands and creators love.</p>
+      <div class="hero-cta">
+        <a href="#" class="btn btn-solid">↓ Download Resume</a>
+        <a href="#contact" class="btn btn-outline">📅 Book a Call</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <div class="frame">
+        <div class="placeholder-avatar">SC</div>
+        <div class="tag"><span class="tag-dot"></span> Available Worldwide — Remote</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-band">
+  <div class="marquee-track">
+    <span>Short-Form Editing</span><span>Color Grading</span><span>Motion Graphics</span><span>Sound Design</span><span>Storytelling</span>
+    <span>Short-Form Editing</span><span>Color Grading</span><span>Motion Graphics</span><span>Sound Design</span><span>Storytelling</span>
+  </div>
+</div>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="wrap">
+    <div class="section-top-row reveal">
+      <div class="section-head" style="margin-bottom:0;">
+        <div class="eyebrow-line">01 — Selected Work</div>
+        <h2>The portfolio</h2>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+      <h3 class="subheading">Short-form</h3>
+      <a href="#" class="show-more reveal">Show More ↗</a>
+    </div>
+    <div class="grid-3 reveal">
+      <div class="work-card">
+        <div class="work-thumb"><div class="play-btn">▶</div></div>
+        <div class="work-info"><span>Fashion Reel — Fast Cuts</span><span class="work-tag">SHORT</span></div>
+      </div>
+      <div class="work-card">
+        <div class="work-thumb"><div class="play-btn">▶</div></div>
+        <div class="work-info"><span>Product Launch Teaser</span><span class="work-tag">SHORT</span></div>
+      </div>
+      <div class="work-card">
+        <div class="work-thumb"><div class="play-btn">▶</div></div>
+        <div class="work-info"><span>Travel Vlog Short</span><span class="work-tag">SHORT</span></div>
+      </div>
+    </div>
+
+    <h3 class="subheading" style="margin-top:70px;">Long-form</h3>
+    <div class="grid-2 reveal">
+      <div class="work-card">
+        <div class="work-thumb"><div class="play-btn">▶</div></div>
+        <div class="work-info"><span>Documentary — City Lights</span><span class="work-tag">LONG</span></div>
+      </div>
+      <div class="work-card">
+        <div class="work-thumb"><div class="play-btn">▶</div></div>
+        <div class="work-info"><span>Cinematic Wedding Film</span><span class="work-tag">LONG</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap expertise-grid">
+    <div class="reveal">
+      <div class="eyebrow-line">02 — Expertise</div>
+      <h2>Tools &amp; craft</h2>
+      <p>Years behind the timeline — from surgical cuts to cinematic color and sound that makes every frame land.</p>
+    </div>
+    <div class="reveal">
+      <div class="skill-row" data-pct="100">
+        <div class="top"><span>DaVinci Resolve</span><span>100%</span></div>
+        <div class="bar-track"><div class="bar-fill"></div></div>
+      </div>
+      <div class="skill-row" data-pct="100">
+        <div class="top"><span>Adobe Premiere Pro</span><span>100%</span></div>
+        <div class="bar-track"><div class="bar-fill"></div></div>
+      </div>
+      <div class="skill-row" data-pct="95">
+        <div class="top"><span>Color Grading</span><span>95%</span></div>
+        <div class="bar-track"><div class="bar-fill"></div></div>
+      </div>
+      <div class="skill-row" data-pct="80">
+        <div class="top"><span>Motion Graphics</span><span>80%</span></div>
+        <div class="bar-track"><div class="bar-fill"></div></div>
+      </div>
+      <div class="skill-row" data-pct="85">
+        <div class="top"><span>Sound Design</span><span>85%</span></div>
+        <div class="bar-track"><div class="bar-fill"></div></div>
+      </div>
+      <div class="skill-row" data-pct="90">
+        <div class="top"><span>Storytelling</span><span>90%</span></div>
+        <div class="bar-track"><div class="bar-fill"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow-line">03 — Testimonials</div>
+      <h2>Loved by creators &amp; brands</h2>
+    </div>
+    <div class="grid-2 reveal">
+      <blockquote>
+        <span class="quote-mark">“</span>
+        <p>Saksham turned our raw interview footage into a cinematic story. Our launch video hit 1M+ views in a week.</p>
+        <div class="author"><div class="avatar-init">A</div><div><div class="name">Aarav Mehta</div><div class="role">Founder, Nova Studios</div></div></div>
+      </blockquote>
+      <blockquote>
+        <span class="quote-mark">“</span>
+        <p>The color grade and pacing were flawless. Easily the most professional editor we've collaborated with.</p>
+        <div class="author"><div class="avatar-init">S</div><div><div class="name">Sophie Laurent</div><div class="role">Creative Director, Maison Lux</div></div></div>
+      </blockquote>
+      <blockquote>
+        <span class="quote-mark">“</span>
+        <p>My retention jumped after Saksham started editing. Sharp cuts, perfect sound design, zero fluff.</p>
+        <div class="author"><div class="avatar-init">D</div><div><div class="name">Daniel Kim</div><div class="role">YouTuber, 2.4M subs</div></div></div>
+      </blockquote>
+      <blockquote>
+        <span class="quote-mark">“</span>
+        <p>Reliable, fast, and obsessed with detail. Every reel he delivers feels premium and on-brand.</p>
+        <div class="author"><div class="avatar-init">P</div><div><div class="name">Priya Sharma</div><div class="role">Marketing Lead, Bloom</div></div></div>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <div class="eyebrow-line">04 — Book a Call</div>
+      <h2>Let's make something worth watching.</h2>
+      <p>Tell me about your project and I'll reply within 24 hours with next steps and availability.</p>
+      <div class="contact-line">📧 <a href="mailto:hello@sakshamchawla.com">hello@sakshamchawla.com</a></div>
+      <div class="contact-line">📞 +91 98765 43210</div>
+    </div>
+    <form id="contactForm" class="reveal">
+      <div class="field"><label>Name</label><input type="text" placeholder="Your name" required></div>
+      <div class="field"><label>Email</label><input type="email" placeholder="you@email.com" required></div>
+      <div class="field"><label>Project Type</label>
+        <select>
+          <option>Short-form</option>
+          <option>Long-form</option>
+          <option>Color Grading Only</option>
+          <option>Full Production</option>
+        </select>
+      </div>
+      <div class="field"><label>Budget (optional)</label><input type="text" placeholder="$"></div>
+      <div class="field full"><label>Message</label><textarea placeholder="Tell me about your project..."></textarea></div>
+      <button type="submit" class="submit-btn">➤ Book a Call</button>
+      <div class="form-note" id="formNote">Thanks! This form is a template — connect it to a service like Formspree or EmailJS to receive real messages.</div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h3>Saksham Chawla</h3>
+        <div class="role">Video Editor &amp; Motion Storyteller</div>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <div class="row">📞 +91 98765 43210</div>
+        <div class="row">📧 hello@sakshamchawla.com</div>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <div class="social-row">
+          <a href="#">IG</a><a href="#">in</a><a href="#">YT</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Saksham Chawla. All rights reserved.</span>
+      <span>Crafted frame by frame.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal-on-scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); }
+    });
+  },{threshold:0.15});
+  reveals.forEach(el=>obs.observe(el));
+
+  // Skill bar fill on scroll into view
+  const bars = document.querySelectorAll('.skill-row');
+  const barObs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const fill = e.target.querySelector('.bar-fill');
+        const pct = e.target.getAttribute('data-pct');
+        fill.style.width = pct + '%';
+      }
+    });
+  },{threshold:0.4});
+  bars.forEach(el=>barObs.observe(el));
+
+  // Contact form (template — no backend)
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('formNote').classList.add('show');
+  });
+</script>
+
+</body>
+</html>
